@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Coin Flip Game</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .blockchain-select {
+            margin-bottom: 20px;
+        }
+
+        .wallet-connect {
+            margin-bottom: 20px;
+        }
+
+        .coin {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .coin.heads {
+            transform: rotateX(180deg);
+        }
+
+        .result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coin Flip Game</h1>
+        <div class="blockchain-select">
+            <label for="blockchain">Choose Blockchain:</label>
+            <select id="blockchain">
+                <option value="ethereum">Ethereum</option>
+                <option value="polygon">Polygon</option>
+                <option value="solana">Solana</option>
+                <option value="bitcoin">Bitcoin</option>
+            </select>
+        </div>
+        <div class="wallet-connect">
+            <button id="connect-wallet">Connect Wallet</button>
+        </div>
+        <div class="bet-amount">
+            <label for="amount">Bet Amount:</label>
+            <input type="number" id="amount" min="1" value="1">
+        </div>
+        <div class="side-select">
+            <label for="side">Choose Side:</label>
+            <select id="side">
+                <option value="heads">Heads</option>
+                <option value="tails">Tails</option>
+            </select>
+        </div>
+        <div class="coin" id="coin">
+            <span id="coin-face">?</span>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        const coin = document.getElementById('coin');
+        const coinFace = document.getElementById('coin-face');
+        const result = document.getElementById('result');
+        const connectWalletButton = document.getElementById('connect-wallet');
+        const amountInput = document.getElementById('amount');
+        const sideSelect = document.getElementById('side');
+
+        let walletConnected = false;
+        let selectedBlockchain = 'ethereum';
+
+        connectWalletButton.addEventListener('click', async () => {
+            // Implement your wallet connection logic here
+            // This is just a placeholder
+            try {
+                await connectWallet();
+                walletConnected = true;
+                connectWalletButton.disabled = true;
+                connectWalletButton.textContent = 'Wallet Connected';
+            } catch (error) {
+                console.error('Error connecting wallet:', error);
+                result.textContent = 'Error connecting wallet';
+            }
+        });
+
+        coin.addEventListener('click', async () => {
+            if (!walletConnected) {
+                result.textContent = 'Please connect your wallet first';
+                return;
+            }
+
+            const amount = parseInt(amountInput.value);
+            const side = sideSelect.value;
+
+            // Implement your coin flip logic here
+            // This is just a placeholder
+            const randomSide = Math.random() < 0.5 ? 'heads' : 'tails';
+
+            if (side === randomSide) {
+                result.textContent = `You won! Double your tokens (${amount * 2})`;
+            } else {
+                result.textContent = 'You lost! No tokens';
+            }
+
+            coin.classList.add(randomSide);
+            coinFace.textContent = randomSide === 'heads' ? 'H' : 'T';
+
+            await delay(2000);
+
+            coin.classList.remove(randomSide);
+            coinFace.textContent = '?';
+        });
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Placeholder functions for wallet connection and coin flip logic
+        async function connectWallet() {
+            // Your wallet connection logic
+            console.log(`Connecting to ${selectedBlockchain} wallet...`);
+            return new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    </script>
+</body>
+</html>
